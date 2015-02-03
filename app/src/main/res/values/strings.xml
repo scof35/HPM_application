@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">HPM_application</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="HPM">Home Power Monitoring</string>
     <string name="action_settings">Settings</string>
 
 </resources>

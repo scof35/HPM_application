@@ -4,6 +4,19 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.lang.String;
+import org.apache.http.*;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.json.*;
 
 
 public class LoginActivity extends ActionBarActivity {
@@ -35,5 +48,46 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean seConnecter(){
+        EditText edTlogin = null;
+        EditText edTMDP = null;
+        String sLogin = null;
+        String sMDP = null;
+        JSONObject json = new JSONObject();
+
+        edTlogin = (EditText)findViewById(R.id.editTextLogin);
+        edTMDP = (EditText)findViewById(R.id.editTextMDP);
+        sLogin = edTlogin.getText().toString();
+        sMDP = edTMDP.getText().toString();
+        try{
+            json.put("Login", sLogin);
+            json.put("Mot de passe", sMDP);
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, 0);
+            HttpConnectionParams.setSoTimeout(httpParams, 0);
+            HttpClient client = new DefaultHttpClient(httpParams);
+            //
+            //String url = "http://10.0.2.2:8080/sample1/webservice2.php?" +
+            //             "json={\"UserName\":1,\"FullName\":2}";
+            String url = "http://192.168.1.2/sample1/webservice2.php";
+
+            HttpPost request = new HttpPost(url);
+            request.setEntity(new ByteArrayEntity(json.toString().getBytes("UTF8")));
+            request.setHeader("json", json.toString());
+            HttpResponse response = client.execute(request);
+            HttpEntity entity = response.getEntity();
+        }
+        catch(Throwable t){
+            Toast.makeText(this, "Requete impossible : " + t.toString(),
+                    Toast.LENGTH_LONG).show();
+        }
+
+
+
+
+
+        return true;
     }
 }
