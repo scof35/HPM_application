@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--  Login Activity -->
+        <activity
+            android:label="Liste des appareils"
+            android:name=".ListeAppareilsActivity"></activity>
+
     </application>
 
 </manifest>

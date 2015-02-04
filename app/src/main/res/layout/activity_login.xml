@@ -56,13 +56,14 @@
         android:layout_below="@id/editTextMDP"
         android:layout_centerHorizontal="true"/>
 
-    <EditText
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_alignBottom="@+id/textViewMDP"
-        android:layout_alignRight="@+id/buttonConnecter"
-        android:layout_alignEnd="@+id/buttonConnecter" />
+        android:text=""
+        android:id="@+id/textViewErreur"
+        android:layout_below="@+id/buttonConnecter"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
