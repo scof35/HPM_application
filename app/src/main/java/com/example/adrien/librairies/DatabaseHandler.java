@@ -22,10 +22,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Login Table Columns names
     private static final String KEY_ID = "id_maison";
-    private static final String KEY_TEL = "id_tel";
     private static final String KEY_LOGIN = "login";
     private static final String KEY_PWD = "password";
-    private static final String KEY_CONNECTED = "connect";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,10 +34,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_TEL + " TEXT,"
                 + KEY_LOGIN + " TEXT UNIQUE,"
-                + KEY_PWD + " TEXT,"
-                + KEY_CONNECTED + " TEXT" + ")";
+                + KEY_PWD + " TEXT," + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
     }
 
@@ -56,14 +52,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String id_tel, String login, String password, String connected) {
+    public void addUser(String id_tel, String login, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_TEL, id_tel); // Name
-        values.put(KEY_LOGIN, login); // Email
-        values.put(KEY_PWD, password); // Email
-        values.put(KEY_CONNECTED, connected); // Created At
+        values.put(KEY_LOGIN, login); // Login
+        values.put(KEY_PWD, password); // Mot de passe
 
         // Inserting Row
         db.insert(TABLE_LOGIN, null, values);
@@ -82,10 +76,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
-            user.put("name", cursor.getString(1));
-            user.put("email", cursor.getString(2));
-            user.put("uid", cursor.getString(3));
-            user.put("created_at", cursor.getString(4));
+            user.put("id_maison", cursor.getString(1));
+            user.put("login", cursor.getString(2));
+            user.put("password", cursor.getString(3));
+            user.put("connected", cursor.getString(4));
         }
         cursor.close();
         db.close();

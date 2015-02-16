@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class JSONParser {
@@ -24,6 +25,8 @@ public class JSONParser {
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
+    static String[] jsonTab = null;
+    static String jsonLastline = null;
 
     // constructor
     public JSONParser() {
@@ -36,9 +39,9 @@ public class JSONParser {
         try {
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
+            Log.v("JSONParser", url);
             HttpPost httpPost = new HttpPost(url);
             httpPost.setEntity(new UrlEncodedFormEntity(params));
-
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();
@@ -58,17 +61,22 @@ public class JSONParser {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
+                Log.v("JSONParser", line);
             }
             is.close();
-            json = sb.toString();
-            Log.e("JSON", json);
+            json =  sb.toString();
+            jsonTab = json.split("\n");
+            jsonLastline = jsonTab[countLines(json)-1];
+
+            Log.e("Dernière ligne de jsonTab", jsonLastline);
+
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
 
         // try parse the string to a JSON object
         try {
-            jObj = new JSONObject(json);
+            jObj = new JSONObject(jsonLastline);
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
@@ -76,5 +84,10 @@ public class JSONParser {
         // return JSON String
         return jObj;
 
+    }
+
+    private static int countLines(String str){
+        String[] lines = str.split("\n");
+        return  lines.length;
     }
 }

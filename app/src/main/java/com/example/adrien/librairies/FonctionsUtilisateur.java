@@ -5,23 +5,33 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.example.adrien.hpm_application.ListeAppareilsActivity;
+import com.example.adrien.hpm_application.R;
 import com.example.adrien.librairies.DatabaseHandler;
 
 public class FonctionsUtilisateur {
+    private static final String TAG = "myApp";
 
     private JSONParser jsonParser;
 
     // Testing in localhost using wamp or xampp
     // use http://10.0.2.2/ to connect to your localhost ie http://localhost/
-    private static String loginURL = "http://10.0.2.2/hpm/";
-    private static String registerURL = "http://10.0.2.2/hpm/";
+    private String loginURL = "http://192.168.43.109/hpm/index.php";
+    private String registerURL = "http://192.168.43.109/hpm/index.php";
 
-    private static String login_tag = "login";
-    private static String register_tag = "register";
+    private String login_tag = "login";
+    private String register_tag = "register";
 
     // constructor
     public FonctionsUtilisateur(){
@@ -33,16 +43,15 @@ public class FonctionsUtilisateur {
      * @param login
      * @param password
      * */
-    public JSONObject loginUser(String login, String password){
-        // Building Parameters
+    public List<NameValuePair> loginUser(String login, String password){
+         //Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params = new ArrayList<NameValuePair>();
+        Log.v(TAG, login_tag);
         params.add(new BasicNameValuePair("tag", login_tag));
         params.add(new BasicNameValuePair("login", login));
         params.add(new BasicNameValuePair("password", password));
-        JSONObject json = jsonParser.getJSONFromUrl(loginURL, params);
-        // return json
-        // Log.e("JSON", json.toString());
-        return json;
+        return params;
     }
 
     /**

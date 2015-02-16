@@ -3,6 +3,7 @@ package com.example.adrien.hpm_application;
         import android.app.Activity;
         import android.content.Intent;
         import android.os.Bundle;
+        import android.util.Log;
         import android.view.View;
         import android.widget.Button;
 
@@ -11,7 +12,7 @@ package com.example.adrien.hpm_application;
  * Created by Adrien on 04/02/2015.
  */
 public class ListeAppareilsActivity extends Activity {
-
+    private static final String TAG = "myApp";
 
 
         FonctionsUtilisateur userFunctions;
@@ -19,7 +20,7 @@ public class ListeAppareilsActivity extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
+            Log.v(TAG, "did something");
             /**
              * Dashboard Screen for the application
              * */
