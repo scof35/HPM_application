@@ -23,15 +23,14 @@ import java.util.List;
 
 public class LoginActivity extends Activity {
     Button btnLogin;
-    //Button btnLinkToRegister;
     EditText inputLog;
     EditText inputPassword;
     TextView textViewErreur ;
 
     // JSON Response node names
     private static final String KEY_SUCCESS = "success";
-//    private static final String KEY_ERROR = "error";
-//    private static final String KEY_ERROR_MSG = "error_msg";
+    private static final String KEY_ERROR = "error";
+    private static final String KEY_ERROR_MSG = "error_msg";
     private static final String KEY_ID = "id_maison";
     private static final String KEY_LOGIN = "login";
     private static final String KEY_PWD = "password";
@@ -39,11 +38,10 @@ public class LoginActivity extends Activity {
     private static List<NameValuePair> params;
 
 
-    // Testing in localhost using wamp or xampp
-    // use http://10.0.2.2/ to connect to your localhost ie http://localhost/
-    private static final String loginURL = "http://192.168.43.109/hpm/index.php";
-    private static final String registerURL = "http://192.168.43.109/hpm/index.php";
 
+    // Pour des tests,
+    // Utiliser http://10.0.2.2/  pour se connecter au localhost avec WAMP i.e. http://localhost/
+    private static final String loginURL = "http://192.168.43.109/hpm/index.php";
     private static final String login_tag = "login";
     private static final String register_tag = "register";
 
@@ -66,9 +64,19 @@ public class LoginActivity extends Activity {
     }
 
 
+
+
+
+
+
+    /**
+     * AsyncTask  en arrière plan pour récupérer et comparer les identifiants par requete HTTP
+     * */
+
     private class JSONParse extends AsyncTask<String, String, JSONObject> {
 
         private FonctionsUtilisateur userFunction;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -91,9 +99,7 @@ public class LoginActivity extends Activity {
         protected JSONObject doInBackground(String... args) {
             JSONParser jParser = new JSONParser();
             // Getting JSON from URL
-            JSONObject json = jParser.getJSONFromUrl(loginURL, params);
-            Log.v("DOINBACKGROUND", json.toString());
-
+            JSONObject json = jParser.getJSONFromUrl("POST",loginURL, params);
             return json;
         }
 
@@ -116,7 +122,8 @@ public class LoginActivity extends Activity {
 
                         // Clear all previous data in database
                         userFunction.logoutUser(getApplicationContext());
-                        db.addUser(json_user.getString(KEY_ID), json_user.getString(KEY_LOGIN), json_user.getString(KEY_PWD));
+                        db.addUser(json_user.getString(KEY_ID), json_user.getString(KEY_LOGIN),
+                                json_user.getString(KEY_PWD));
 
                         // Launch Dashboard Screen
                         Intent dashboard = new Intent(getApplicationContext(), ListeAppareilsActivity.class);

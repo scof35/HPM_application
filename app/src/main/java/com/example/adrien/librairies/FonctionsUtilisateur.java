@@ -21,15 +21,9 @@ import com.example.adrien.hpm_application.R;
 import com.example.adrien.librairies.DatabaseHandler;
 
 public class FonctionsUtilisateur {
+
     private static final String TAG = "myApp";
-
     private JSONParser jsonParser;
-
-    // Testing in localhost using wamp or xampp
-    // use http://10.0.2.2/ to connect to your localhost ie http://localhost/
-    private String loginURL = "http://192.168.43.109/hpm/index.php";
-    private String registerURL = "http://192.168.43.109/hpm/index.php";
-
     private String login_tag = "login";
     private String register_tag = "register";
 
@@ -60,7 +54,7 @@ public class FonctionsUtilisateur {
      * @param login
      * @param password
      * */
-    public JSONObject registerUser(String name, String login, String password){
+    public List<NameValuePair> registerUser(String name, String login, String password){
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("tag", register_tag));
@@ -69,9 +63,9 @@ public class FonctionsUtilisateur {
         params.add(new BasicNameValuePair("password", password));
 
         // getting JSON Object
-        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+       // JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
         // return json
-        return json;
+        return params;
     }
 
     /**

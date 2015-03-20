@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp" >
+
+        <!-- Nom capteur -->
+        <TextView
+            android:id="@+id/nom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+        <!-- Consommation -->
+        <TextView
+            android:id="@+id/conso"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nom"
+            android:layout_marginTop="5dp"/>
+
+        <!-- ON/OFF -->
+        <ToggleButton
+            android:id="@+id/onoff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
