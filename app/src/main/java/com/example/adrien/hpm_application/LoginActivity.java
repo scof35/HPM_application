@@ -58,7 +58,7 @@ public class LoginActivity extends Activity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                new JSONParse().execute();
+                new IdentificationClient().execute();
             }
         });
     }
@@ -73,7 +73,7 @@ public class LoginActivity extends Activity {
      * AsyncTask  en arrière plan pour récupérer et comparer les identifiants par requete HTTP
      * */
 
-    private class JSONParse extends AsyncTask<String, String, JSONObject> {
+    class IdentificationClient extends AsyncTask<String, String, JSONObject> {
 
         private FonctionsUtilisateur userFunction;
 
@@ -99,7 +99,7 @@ public class LoginActivity extends Activity {
         protected JSONObject doInBackground(String... args) {
             JSONParser jParser = new JSONParser();
             // Getting JSON from URL
-            JSONObject json = jParser.getJSONFromUrl("POST",loginURL, params);
+            JSONObject json = jParser.makeHttpRequest(loginURL,"POST",params);
             return json;
         }
 
