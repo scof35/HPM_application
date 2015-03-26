@@ -1,5 +1,7 @@
 package com.example.adrien.librairies;
 
+import android.content.DialogInterface;
+import android.util.Log;
 import android.widget.BaseAdapter;
 
 import com.example.adrien.hpm_application.R;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -54,22 +57,41 @@ public class CustomListAdapter extends BaseAdapter{
         if (convertView == null)
             convertView = inflater.inflate(R.layout.custom_row, null);
 
-
         TextView nom = (TextView) convertView.findViewById(R.id.nom);
-        TextView conso = (TextView) convertView.findViewById(R.id.conso);
+        TextView conso1 = (TextView) convertView.findViewById(R.id.conso1);
+        TextView conso2 = (TextView) convertView.findViewById(R.id.conso2);
+        TextView prix1 = (TextView) convertView.findViewById(R.id.prix1);
+        TextView prix2 = (TextView) convertView.findViewById(R.id.prix2);
         ToggleButton onoff = (ToggleButton) convertView.findViewById(R.id.onoff);
 
-        // getting movie data for the row
+        // getting capteur data for the row
         Capteur m = capteurItems.get(position);
 
         // nom
         nom.setText(m.getNom());
 
         // conso
-        conso.setText("Consommation : " + String.valueOf(m.getConso()));
+        conso1.setText("Consommation : ");
+        conso2.setText(String.valueOf(m.getConso()) + " Watts");
+
+        //Prix
+        prix1.setText("Prix : ");
+        prix2.setText(String.valueOf(m.getPrix()) + " €");
 
         // boutton ON/OFF
         onoff.setChecked(m.getEtat());
+        onoff.setOnCheckedChangeListener(new  CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton toggleButton, boolean isChecked) {
+                if(isChecked){
+                    Log.v("OLOL","1");
+
+                } else{
+                    Log.v("OLOL","0");
+                }
+
+            }
+        });
 
         return convertView;
     }

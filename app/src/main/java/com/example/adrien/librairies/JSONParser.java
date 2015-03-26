@@ -46,6 +46,7 @@ public class JSONParser {
             if(method == "POST"){
                 // request method is POST
                 // defaultHttpClient
+                Log.v("PARAMS", params.toString());
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(url);
                 httpPost.setEntity(new UrlEncodedFormEntity(params));
@@ -95,6 +96,7 @@ public class JSONParser {
         // try parse the string to a JSON object
         try {
             jObj = new JSONObject(jsonLastline);
+            //Log.v("JSONPARSER", jsonLastline.toString());
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }

@@ -73,7 +73,8 @@ public class FonctionsUtilisateur {
      * */
     public boolean isUserLoggedIn(Context context){
         DatabaseHandler db = new DatabaseHandler(context);
-        int count = db.getRowCount();
+        int count = db.getCapteurCount();
+        Log.v("COUNT", Integer.toString(count));
         if(count > 0){
             // user logged in
             return true;
@@ -92,3 +93,5 @@ public class FonctionsUtilisateur {
     }
 
 }
+
+

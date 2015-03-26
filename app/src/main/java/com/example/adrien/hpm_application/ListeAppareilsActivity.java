@@ -3,6 +3,7 @@ package com.example.adrien.hpm_application;
         import android.app.Activity;
         import android.app.ProgressDialog;
         import android.content.Intent;
+        import android.database.Cursor;
         import android.os.AsyncTask;
         import android.os.Bundle;
         import android.util.Log;
@@ -14,10 +15,12 @@ package com.example.adrien.hpm_application;
 
         import com.example.adrien.librairies.Capteur;
         import com.example.adrien.librairies.CustomListAdapter;
+        import com.example.adrien.librairies.DatabaseHandler;
         import com.example.adrien.librairies.FonctionsUtilisateur;
         import com.example.adrien.librairies.JSONParser;
 
         import org.apache.http.NameValuePair;
+        import org.apache.http.message.BasicNameValuePair;
         import org.json.JSONArray;
         import org.json.JSONException;
         import org.json.JSONObject;
@@ -27,7 +30,6 @@ package com.example.adrien.hpm_application;
         import java.util.List;
 
 public class ListeAppareilsActivity extends Activity {
-    private static final String TAG = "myApp";
     private static final String TAG_SUCCESS = "success";
 
     //JSON Node names
@@ -39,24 +41,26 @@ public class ListeAppareilsActivity extends Activity {
     private static final String TAG_NOM = "nom";
 
     private static String appsURL = "http://192.168.43.109/hpm/get_all_products.php";
+    private static String id_maison = null;
 
     private ProgressDialog pDialog;
-    private List<Capteur> capteurListe = new ArrayList<Capteur>();
-    private ListView listView;
-    private CustomListAdapter adapter;
+    private static List<Capteur> capteurListe = new ArrayList<Capteur>();
+    private static ListView listView;
+    private static CustomListAdapter adapt;
 
     JSONArray appareils;
-    ArrayList<HashMap<String, String>> appareilsList;
     FonctionsUtilisateur userFunctions;
     Button btnLogout;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            Log.v(TAG, "did something");
             /**
              * Dashboard Screen for the application
              * */
+              DatabaseHandler db = new DatabaseHandler(this);
+            id_maison = db.getUserIdMaison();
+            Log.v("ID_MAISON_get", id_maison);
 
              // Check login status in database
             userFunctions = new FonctionsUtilisateur();
@@ -64,13 +68,15 @@ public class ListeAppareilsActivity extends Activity {
                 // user already logged in show databoard
                 setContentView(R.layout.activity_appareils);
 
-
                 btnLogout = (Button) findViewById(R.id.btnLogout);
                 listView = (ListView) findViewById(R.id.list);
-                adapter = new CustomListAdapter(this, capteurListe);
-                listView.setAdapter(adapter);
+                adapt = new CustomListAdapter(this, capteurListe);
+                //listView.setAdapter(adapt);
 
                 new ChargerApps().execute();
+
+                Log.v("CapteurListe", capteurListe.toString());
+
 
                 btnLogout.setOnClickListener(new View.OnClickListener() {
 
@@ -113,6 +119,7 @@ public class ListeAppareilsActivity extends Activity {
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
+
         }
 
         /**
@@ -125,6 +132,7 @@ public class ListeAppareilsActivity extends Activity {
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("id_maison", id_maison));
 
             // getting JSON string from URL
             JSONObject json2 = jParser.makeHttpRequest(appsURL, "GET", params);
@@ -142,48 +150,22 @@ public class ListeAppareilsActivity extends Activity {
                     // appareils found
                     // Getting Array of appareils
                     appareils = json2.getJSONArray(TAG_APPAREILS);
-                    Log.d("JSONarray: ", json2.getJSONArray(TAG_APPAREILS).toString());
+                    Log.d("JSONarray: ", appareils.toString());
+                    Log.d("AppsLength: ", Integer.toString(appareils.length()));
 
                     // looping through All Appareils
                     for (int i = 0; i < appareils.length(); i++) {
-                        JSONObject c = appareils.getJSONObject(i);
-//                        Log.d("JSONarray[i]: ", c.toString());
-//
-//                        // Storing each json item in variable
-//                        String nom = c.getString(TAG_NOM);
-//                        String consommation = c.getString(TAG_CONSOMMATION);
-//
-//                        // creating new HashMap
-//                        HashMap<String, String> map = new HashMap<String, String>();
-//
-//                        // adding each child node to HashMap key => value
-//                        map.put(TAG_NOM, nom);
-//                        map.put(TAG_ID_CAPTEUR, consommation);
-//                        Log.v("HashMap", map.toString());
-//
-//                        // adding HashList to ArrayList
-//                        appareilsList.add(map);
-
-
-
-
 
                         JSONObject obj = appareils.getJSONObject(i);
-                        Capteur capteur = new Capteur();
-                        capteur.setNom(obj.getString("description"));
-                        capteur.setConso(obj.getString("consommation"));
 
+                        if(obj.getString("id_maison")==id_maison) {
+                            Capteur capteur = new Capteur();
+                            capteur.setNom(obj.getString("description"));
+                            capteur.setConso(obj.getString("puissance_actuelle"));
 
-
-                        // adding movie to movies array
-                        capteurListe.add(capteur);
-
-
-
-
-
-
-
+                            // ajoute capteur à la liste des capteurs
+                            capteurListe.add(capteur);
+                        }
                     }
                 } else {
                     // no appareils found
@@ -207,21 +189,18 @@ public class ListeAppareilsActivity extends Activity {
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all appareils
             pDialog.dismiss();
+            //adapter.notifyDataSetChanged();
             // updating UI from Background Thread
-//            runOnUiThread(new Runnable() {
-//                public void run() {
-//                    /**
-//                     * Updating parsed JSON data into ListView
-//                     * */
-//                    ListAdapter adapter = new SimpleAdapter(
-//                            ListeAppareilsActivity.this, appareilsList,
-//                            R.layout.list_item, new String[] { TAG_ID_CAPTEUR,
-//                            TAG_NAME},
-//                            new int[] { R.id.id_capteur, R.id.name });
-//                    // updating listview
-//                    setListAdapter(adapter);
-//                }
-//            });
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    /**
+                     * Updating parsed JSON data into ListView
+                     * */
+                    // updating listview
+                    //setListAdapter(adapt);
+                    listView.setAdapter(adapt);
+                }
+            });
 
         }
 

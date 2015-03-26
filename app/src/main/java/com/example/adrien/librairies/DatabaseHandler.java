@@ -7,6 +7,7 @@ package com.example.adrien.librairies;
         import android.database.Cursor;
         import android.database.sqlite.SQLiteDatabase;
         import android.database.sqlite.SQLiteOpenHelper;
+        import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -21,9 +22,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_LOGIN = "maisons";
 
     // Login Table Columns names
-    private static final String KEY_ID = "id_maison";
+    private static final String KEY_IDm = "id_maison";
     private static final String KEY_LOGIN = "login";
     private static final String KEY_PWD = "password";
+    private static final String KEY_IDc = "id_capteur";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,7 +35,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_IDm + " INTEGER PRIMARY KEY,"
                 + KEY_LOGIN + " TEXT UNIQUE,"
                 + KEY_PWD + " TEXT," + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
@@ -52,10 +54,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String id_tel, String login, String password) {
+    public void addUser(String id_maison, String login, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(KEY_IDm, id_maison);
         values.put(KEY_LOGIN, login); // Login
         values.put(KEY_PWD, password); // Mot de passe
 
@@ -65,9 +68,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Getting user data from database
+     * Getting capteur data from database
      * */
-    public HashMap<String, String> getUserDetails(){
+    public HashMap<String, String> getCapteurDetails(){
         HashMap<String,String> user = new HashMap<String,String>();
         String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
 
@@ -82,29 +85,65 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             user.put("connected", cursor.getString(4));
         }
         cursor.close();
-        db.close();
-        // return user
         return user;
     }
 
+    public String getUserIdMaison(){
+        String id_maison = "FAUX";
+        int nbColonnes;
+        String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        nbColonnes = cursor.getCount();
+        Log.v("ID_MAISON", Integer.toString(nbColonnes));
+
+        if( nbColonnes> 0){
+            id_maison = cursor.getString(0);
+            Log.v("ID_MAISON", id_maison);
+        }
+            cursor.close();
+            return id_maison;
+    }
+
+
+    // Updating état capteur
+    public int updateCapteur(Capteur capteur) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_IDc, capteur.getNom());
+
+        // updating row
+        return db.update(TABLE_LOGIN, values, KEY_IDm + " = ?",
+                new String[] { String.valueOf(capteur.getNom()) });
+    }
+
+    // Deleting capteur
+    public void deleteContact(Capteur capteur) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_LOGIN, KEY_IDm + " = ?",
+                new String[] { String.valueOf(capteur.getNom()) });
+        //db.close();
+    }
+
     /**
-     * Getting user login status
-     * return true if rows are there in table
+     * Getting nombre de capteurs dans la maison
      * */
-    public int getRowCount() {
+    public int getCapteurCount(){
         String countQuery = "SELECT  * FROM " + TABLE_LOGIN;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int rowCount = cursor.getCount();
         db.close();
         cursor.close();
-
-        // return row count
         return rowCount;
     }
 
+
     /**
-     * Re crate database
      * Delete all tables and create them again
      * */
     public void resetTables(){

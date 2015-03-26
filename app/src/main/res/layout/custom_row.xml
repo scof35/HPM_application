@@ -13,11 +13,36 @@
 
         <!-- Consommation -->
         <TextView
-            android:id="@+id/conso"
-            android:layout_width="fill_parent"
+            android:id="@+id/conso1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/nom"
             android:layout_marginTop="5dp"/>
+        <TextView
+            android:id="@+id/conso2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nom"
+            android:layout_toRightOf="@id/conso1"
+            android:layout_marginTop="5dp"
+            android:textColor="#FF0000"/>
+
+        <!-- Prix -->
+        <TextView
+            android:id="@+id/prix1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/conso1"
+            android:layout_marginTop="5dp"/>
+        <TextView
+            android:id="@+id/prix2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/conso1"
+            android:layout_toRightOf="@id/prix1"
+            android:layout_marginTop="5dp"
+            android:textColor="#FF0000"/>
+
 
         <!-- ON/OFF -->
         <ToggleButton
@@ -25,6 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
 
     </RelativeLayout>

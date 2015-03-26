@@ -125,12 +125,12 @@ public class LoginActivity extends Activity {
                         db.addUser(json_user.getString(KEY_ID), json_user.getString(KEY_LOGIN),
                                 json_user.getString(KEY_PWD));
 
-                        // Launch Dashboard Screen
-                        Intent dashboard = new Intent(getApplicationContext(), ListeAppareilsActivity.class);
+                        // Launch ListeAppareilsActivity Screen
+                        Intent listeAppsActivity = new Intent(getApplicationContext(), ListeAppareilsActivity.class);
 
                         // Close all views before launching Dashboard
-                        dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(dashboard);
+                        listeAppsActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(listeAppsActivity);
 
                         // Close Login Screen
                         finish();
