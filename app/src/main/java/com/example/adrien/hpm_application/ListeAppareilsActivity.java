@@ -35,13 +35,13 @@ public class ListeAppareilsActivity extends Activity {
     //JSON Node names
     private static final String TAG_APPAREILS = "apps";
     private static final String TAG_ID_CAPTEUR = "id_capteur";
-    private static final String TAG_ID_MAISON = "id_maison";
+    private static final String TAG_IDm = "id_maison";
     private static final String TAG_CONSOMMATION = "consommation";
     private static final String TAG_CONNECTE = "connecte";
     private static final String TAG_NOM = "nom";
 
     private static String appsURL = "http://192.168.43.109/hpm/get_all_products.php";
-    private static String id_maison = null;
+    public static String id_maison;
 
     private ProgressDialog pDialog;
     private static List<Capteur> capteurListe = new ArrayList<Capteur>();
@@ -71,12 +71,9 @@ public class ListeAppareilsActivity extends Activity {
                 btnLogout = (Button) findViewById(R.id.btnLogout);
                 listView = (ListView) findViewById(R.id.list);
                 adapt = new CustomListAdapter(this, capteurListe);
-                //listView.setAdapter(adapt);
+                listView.setAdapter(adapt);
 
                 new ChargerApps().execute();
-
-                Log.v("CapteurListe", capteurListe.toString());
-
 
                 btnLogout.setOnClickListener(new View.OnClickListener() {
 
@@ -157,16 +154,20 @@ public class ListeAppareilsActivity extends Activity {
                     for (int i = 0; i < appareils.length(); i++) {
 
                         JSONObject obj = appareils.getJSONObject(i);
+                        Log.v("CapteurListe", "HERE");
 
-                        if(obj.getString("id_maison")==id_maison) {
+                        if(obj.getString(TAG_IDm).equals(id_maison)) {
+
                             Capteur capteur = new Capteur();
                             capteur.setNom(obj.getString("description"));
                             capteur.setConso(obj.getString("puissance_actuelle"));
-
+                            capteur.setId(obj.getString("id_capteur"));
                             // ajoute capteur à la liste des capteurs
                             capteurListe.add(capteur);
                         }
                     }
+
+
                 } else {
                     // no appareils found
                     // Launch Add New product Activity
@@ -188,19 +189,20 @@ public class ListeAppareilsActivity extends Activity {
          * **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all appareils
+
             pDialog.dismiss();
-            //adapter.notifyDataSetChanged();
-            // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
-                    // updating listview
-                    //setListAdapter(adapt);
-                    listView.setAdapter(adapt);
-                }
-            });
+//            //adapter.notifyDataSetChanged();
+//            // updating UI from Background Thread
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    /**
+//                     * Updating parsed JSON data into ListView
+//                     * */
+//                    // updating listview
+//                    //setListAdapter(adapt);
+//                    listView.setAdapter(adapt);
+//                }
+//            });
 
         }
 

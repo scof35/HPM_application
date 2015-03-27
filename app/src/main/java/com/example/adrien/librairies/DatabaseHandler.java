@@ -68,9 +68,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Getting capteur data from database
+     * Getting user data from database
      * */
-    public HashMap<String, String> getCapteurDetails(){
+    public HashMap<String, String> getUserDetails(){
         HashMap<String,String> user = new HashMap<String,String>();
         String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
 
@@ -110,7 +110,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     // Updating état capteur
-    public int updateCapteur(Capteur capteur) {
+    public int updateEtatCapteur(Capteur capteur, boolean onOff) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -122,7 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Deleting capteur
-    public void deleteContact(Capteur capteur) {
+    public void deleteCapteur(Capteur capteur) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_LOGIN, KEY_IDm + " = ?",
                 new String[] { String.valueOf(capteur.getNom()) });
