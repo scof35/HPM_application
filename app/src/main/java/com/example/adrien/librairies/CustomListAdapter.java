@@ -71,7 +71,7 @@ public class CustomListAdapter extends BaseAdapter{
         TextView prix1 = (TextView) convertView.findViewById(R.id.prix1);
         TextView prix2 = (TextView) convertView.findViewById(R.id.prix2);
         ToggleButton onoff = (ToggleButton) convertView.findViewById(R.id.onoff);
-
+//
         // getting capteur data for the row
         final Capteur m = capteurItems.get(position);
 
