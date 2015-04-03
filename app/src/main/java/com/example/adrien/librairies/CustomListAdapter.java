@@ -33,7 +33,7 @@ public class CustomListAdapter extends BaseAdapter{
     private Activity activity;
     private LayoutInflater inflater;
     private List<Capteur> capteurItems;
-    private static String appsURL = "http://192.168.43.109/hpm/update_product.php";
+    private static String updateURL = "http://192.168.43.109/hpm/update_sensor.php";
 
 
     public CustomListAdapter(Activity activity, List<Capteur> capteurItems) {
@@ -86,26 +86,34 @@ public class CustomListAdapter extends BaseAdapter{
         prix1.setText("Prix : ");
         prix2.setText(String.valueOf(m.getPrix()) + " €");
 
+        Log.v("Etat", Boolean.toString(m.getEtat()));
+
         // boutton ON/OFF
-        onoff.setChecked(m.getEtat());
+        final DatabaseHandler db = new DatabaseHandler(parent.getContext());
+        onoff.setChecked(db.getDonneeBoolCapteur(Integer.valueOf(m.getIdc())));
         onoff.setOnCheckedChangeListener(new  CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton toggleButton, boolean isChecked) {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
+
                 JSONParser json = new JSONParser();
+
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("id_maison", ListeAppareilsActivity.id_maison));
-                params.add(new BasicNameValuePair("id_capteur", m.getId()));
-                params.add(new BasicNameValuePair("description", m.getNom()));
+                params.add(new BasicNameValuePair("id_maison", m.getIdm()));
+                params.add(new BasicNameValuePair("id_capteur", m.getIdc()));
                 if(isChecked){
                     Log.v("OLOL","1");
+                    //m.setEtat(true);
                     params.add(new BasicNameValuePair("etat_demande",Integer.toString(1)));
                 } else{
                     Log.v("OLOL","0");
+                    //m.setEtat(false);
                     params.add(new BasicNameValuePair("etat_demande", Integer.toString(0)));
                 }
-                json.makeHttpRequest(appsURL,"POST",params);
+
+                json.makeHttpRequest(updateURL,"POST",params);
+                db.updateEtatCapteur(m);
             }
         });
         return convertView;

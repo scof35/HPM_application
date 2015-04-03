@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.adrien.hpm_application" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name="com.example.adrien.librairies.GlobalClass"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -17,11 +20,14 @@
             </intent-filter>
         </activity>
 
-        <!--  Login Activity -->
+        <!-- Login Activity -->
         <activity
-            android:label="Liste des appareils"
-            android:name=".ListeAppareilsActivity"></activity>
-
+            android:name=".ListeAppareilsActivity"
+            android:label="Liste des appareils" />
+        <activity
+            android:name=".HomeActivity"
+            android:label="@string/title_activity_home" >
+        </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
+
 </manifest>

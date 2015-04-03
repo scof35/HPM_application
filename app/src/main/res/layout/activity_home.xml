@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.adrien.hpm_application.HomeActivity">
+
+    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/titre" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="..."
+        android:id="@+id/conso_totale"
+        android:layout_below="@+id/titre"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="..."
+        android:id="@+id/prix_total"
+        android:layout_below="@+id/conso_totale"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Appareils"
+        android:id="@+id/btnAppareils"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Réglages"
+        android:id="@+id/btnReglages"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/btnAppareils"
+        android:layout_toRightOf="@+id/prix_total"
+        android:layout_toEndOf="@+id/prix_total" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quitter"
+        android:id="@+id/btnQuitter"
+        android:layout_alignTop="@+id/btnReglages"
+        android:layout_toLeftOf="@+id/prix_total"
+        android:layout_toStartOf="@+id/prix_total" />
+
+
+</RelativeLayout>

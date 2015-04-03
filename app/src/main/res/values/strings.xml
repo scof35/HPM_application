@@ -4,5 +4,8 @@
     <string name="app_name">HPM_application</string>
     <string name="HPM">Home Power Monitoring</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="hello_world">Puissance totale consommée</string>
 
 </resources>

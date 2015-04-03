@@ -2,6 +2,7 @@ package com.example.adrien.hpm_application;
 
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
         import org.json.JSONObject;
 
@@ -15,8 +16,8 @@ import android.view.View;
         import android.widget.EditText;
         import android.widget.TextView;
 
-        import com.example.adrien.librairies.DatabaseHandler;
         import com.example.adrien.librairies.FonctionsUtilisateur;
+import com.example.adrien.librairies.GlobalClass;
 import com.example.adrien.librairies.JSONParser;
 
 import java.util.List;
@@ -29,11 +30,7 @@ public class LoginActivity extends Activity {
 
     // JSON Response node names
     private static final String KEY_SUCCESS = "success";
-    private static final String KEY_ERROR = "error";
-    private static final String KEY_ERROR_MSG = "error_msg";
-    private static final String KEY_ID = "id_maison";
-    private static final String KEY_LOGIN = "login";
-    private static final String KEY_PWD = "password";
+    private static final String KEY_IDm = "id_maison";
     private static final String TAG = "myApp";
     private static List<NameValuePair> params;
 
@@ -97,40 +94,42 @@ public class LoginActivity extends Activity {
 
         @Override
         protected JSONObject doInBackground(String... args) {
-            JSONParser jParser = new JSONParser();
+            JSONParser jParserMaison = new JSONParser();
             // Getting JSON from URL
-            JSONObject json = jParser.makeHttpRequest(loginURL,"POST",params);
-            return json;
+            JSONObject jsonMaison = jParserMaison.makeHttpRequest(loginURL,"POST",params);
+            return jsonMaison;
         }
 
         @Override
         protected void onPostExecute(JSONObject json) {
             Log.v(TAG, "ACHIEVE SUCCESS");
-
             // check for login response
             try {
                 if (json.getString(KEY_SUCCESS) != null) {
                     textViewErreur.setText("");
-                    Log.v(TAG, json.getString(KEY_SUCCESS));
                     String res = json.getString(KEY_SUCCESS);
+                    Log.v(TAG, res);
                     if (Integer.parseInt(res) == 1) {
                         // user successfully logged in
                         // Store user details in SQLite Database
-                        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                        //DatabaseHandler db = new DatabaseHandler(getApplicationContext());
                         JSONObject json_user = json.getJSONObject("user");
-                        String userName = json_user.getString("login");
+
 
                         // Clear all previous data in database
                         userFunction.logoutUser(getApplicationContext());
-                        db.addUser(json_user.getString(KEY_ID), json_user.getString(KEY_LOGIN),
-                                json_user.getString(KEY_PWD));
+//                        db.addUser(json_user.getString(KEY_ID), json_user.getString(KEY_LOGIN),
+//                                json_user.getString(KEY_PWD));
+                        // Calling Application class (see application tag in AndroidManifest.xml)
+                        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+                        globalVariable.setIDm(json_user.getString(KEY_IDm));
 
                         // Launch ListeAppareilsActivity Screen
-                        Intent listeAppsActivity = new Intent(getApplicationContext(), ListeAppareilsActivity.class);
+                        Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
 
                         // Close all views before launching Dashboard
-                        listeAppsActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(listeAppsActivity);
+                        homeActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(homeActivity);
 
                         // Close Login Screen
                         finish();

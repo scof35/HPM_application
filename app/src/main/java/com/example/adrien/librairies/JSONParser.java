@@ -88,7 +88,7 @@ public class JSONParser {
             json = sb.toString();
             jsonTab = json.split("\n");
             jsonLastline = jsonTab[countLines(json)-1];
-            Log.v("JSONPARSER", json);
+            Log.v("JSONPARSER", jsonLastline);
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
@@ -96,7 +96,7 @@ public class JSONParser {
         // try parse the string to a JSON object
         try {
             jObj = new JSONObject(jsonLastline);
-            //Log.v("JSONPARSER", jsonLastline.toString());
+            Log.v("JSONPARSER", jsonLastline.toString());
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
