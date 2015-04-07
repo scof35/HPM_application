@@ -33,7 +33,9 @@ public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Capteur> capteurItems;
-    private static String updateURL = "http://192.168.43.109/hpm/update_sensor.php";
+    //private static String updateURL = "http://192.168.43.109/hpm/update_sensor.php";
+    private static String updateURL = "http://10.0.2.2/hpm/update_sensor.php";
+
 
 
     public CustomListAdapter(Activity activity, List<Capteur> capteurItems) {

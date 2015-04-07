@@ -37,7 +37,9 @@ public class LoginActivity extends Activity {
 
     // Pour des tests,
     // Utiliser http://10.0.2.2/  pour se connecter au localhost avec WAMP i.e. http://localhost/
-    private static final String loginURL = "http://192.168.43.109/hpm/index.php";
+    //private static final String loginURL = "http://192.168.43.109/hpm/index.php";
+    private static final String loginURL = "http://10.0.2.2/hpm/index.php";
+
     private static final String login_tag = "login";
     private static final String register_tag = "register";
 
