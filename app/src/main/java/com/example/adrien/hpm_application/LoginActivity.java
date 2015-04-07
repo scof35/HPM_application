@@ -4,19 +4,19 @@ package com.example.adrien.hpm_application;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
-        import org.json.JSONObject;
+import org.json.JSONObject;
 
-        import android.app.Activity;
-        import android.content.Intent;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-        import com.example.adrien.librairies.FonctionsUtilisateur;
+import com.example.adrien.librairies.FonctionsUtilisateur;
 import com.example.adrien.librairies.GlobalClass;
 import com.example.adrien.librairies.JSONParser;
 
@@ -26,14 +26,13 @@ public class LoginActivity extends Activity {
     Button btnLogin;
     EditText inputLog;
     EditText inputPassword;
-    TextView textViewErreur ;
+    TextView textViewErreur;
 
     // JSON Response node names
     private static final String KEY_SUCCESS = "success";
     private static final String KEY_IDm = "id_maison";
     private static final String TAG = "myApp";
     private static List<NameValuePair> params;
-
 
 
     // Pour des tests,
@@ -48,7 +47,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-      // Importing all assets like buttons, text fields
+        // Importing all assets like buttons, text fields
         btnLogin = (Button) findViewById(R.id.buttonConnecter);
 
         // Login button Click Event
@@ -61,14 +60,9 @@ public class LoginActivity extends Activity {
     }
 
 
-
-
-
-
-
     /**
      * AsyncTask  en arrière plan pour récupérer et comparer les identifiants par requete HTTP
-     * */
+     */
 
     class IdentificationClient extends AsyncTask<String, String, JSONObject> {
 
@@ -80,7 +74,7 @@ public class LoginActivity extends Activity {
             // Importing all assets like buttons, text fields
             inputLog = (EditText) findViewById(R.id.editTextLogin);
             inputPassword = (EditText) findViewById(R.id.editTextMDP);
-            textViewErreur = (TextView)findViewById(R.id.textViewErreur);
+            textViewErreur = (TextView) findViewById(R.id.textViewErreur);
 
             String login = inputLog.getText().toString();
             Log.v(TAG, login);
@@ -96,7 +90,7 @@ public class LoginActivity extends Activity {
         protected JSONObject doInBackground(String... args) {
             JSONParser jParserMaison = new JSONParser();
             // Getting JSON from URL
-            JSONObject jsonMaison = jParserMaison.makeHttpRequest(loginURL,"POST",params);
+            JSONObject jsonMaison = jParserMaison.makeHttpRequest(loginURL, "POST", params);
             return jsonMaison;
         }
 

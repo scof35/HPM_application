@@ -28,17 +28,18 @@ public class FonctionsUtilisateur {
     private String register_tag = "register";
 
     // constructor
-    public FonctionsUtilisateur(){
+    public FonctionsUtilisateur() {
         jsonParser = new JSONParser();
     }
 
     /**
      * function make Login Request
+     *
      * @param login
      * @param password
-     * */
-    public List<NameValuePair> loginUser(String login, String password){
-         //Building Parameters
+     */
+    public List<NameValuePair> loginUser(String login, String password) {
+        //Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params = new ArrayList<NameValuePair>();
         Log.v(TAG, login_tag);
@@ -50,11 +51,12 @@ public class FonctionsUtilisateur {
 
     /**
      * function make Login Request
+     *
      * @param name
      * @param login
      * @param password
-     * */
-    public List<NameValuePair> registerUser(String name, String login, String password){
+     */
+    public List<NameValuePair> registerUser(String name, String login, String password) {
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("tag", register_tag));
@@ -63,19 +65,19 @@ public class FonctionsUtilisateur {
         params.add(new BasicNameValuePair("password", password));
 
         // getting JSON Object
-       // JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
         // return json
         return params;
     }
 
     /**
      * Function get Login status
-     * */
-    public boolean isUserLoggedIn(Context context){
+     */
+    public boolean isUserLoggedIn(Context context) {
         DatabaseHandler db = new DatabaseHandler(context);
         int count = db.getCapteurCount();
-        Log.v("COUNT", Integer.toString(count));
-        if(count > 0){
+        //Log.v("COUNT", Integer.toString(count));
+        if (count > 0) {
             // user logged in
             return true;
         }
@@ -85,8 +87,8 @@ public class FonctionsUtilisateur {
     /**
      * Function to logout user
      * Reset Database
-     * */
-    public boolean logoutUser(Context context){
+     */
+    public boolean logoutUser(Context context) {
         DatabaseHandler db = new DatabaseHandler(context);
         db.resetTables();
         return true;

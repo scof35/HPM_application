@@ -2,16 +2,15 @@ package com.example.adrien.hpm_application;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.net.wifi.WifiInfo;
 
 import com.example.adrien.librairies.Capteur;
 import com.example.adrien.librairies.DatabaseHandler;
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeActivity extends Activity implements View.OnClickListener{
+public class HomeActivity extends Activity implements View.OnClickListener {
 
     Button btnAppareils, btnReglages, btnQuitter;
     JSONArray appareils;
@@ -44,6 +43,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
 
         btnAppareils = (Button) findViewById(R.id.btnAppareils);
@@ -55,7 +55,8 @@ public class HomeActivity extends Activity implements View.OnClickListener{
         btnReglages.setOnClickListener(this);
         btnQuitter.setOnClickListener(this);
 
-        new ChargerApps().execute();
+            new ChargerApps().execute();
+
     }
 
     @Override
@@ -72,7 +73,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
             case R.id.btnReglages:
 
                 break;
-            case R.id.btnQuitter :
+            case R.id.btnQuitter:
                 Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                 login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(login);
@@ -82,16 +83,14 @@ public class HomeActivity extends Activity implements View.OnClickListener{
     }
 
 
-
-
     /**
      * AsyncTask  en arrière plan pour charger tous les appareils par requete HTTP
-     * */
+     */
     class ChargerApps extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
-         * */
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -105,9 +104,10 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 
         /**
          * getting All appareils from url
-         * */
+         */
         protected String doInBackground(String... args) {
-            Boolean captExiste=false;
+            Log.v("---------FONCTION------", "DO_IN_BACKGROUND");
+            Boolean captExiste = false;
             String etatCapt;
             JSONParser jParserAppareils = new JSONParser();
 
@@ -117,7 +117,7 @@ public class HomeActivity extends Activity implements View.OnClickListener{
             // Calling Application class (see application tag in AndroidManifest.xml)
             final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
             // Get id_maison from global/application context
-            final String id_maison  = globalVariable.getIDm();
+            final String id_maison = globalVariable.getIDm();
             params.add(new BasicNameValuePair("id_maison", id_maison));
 
             // getting JSON string from URL
@@ -129,7 +129,6 @@ public class HomeActivity extends Activity implements View.OnClickListener{
             try {
                 // Checking for SUCCESS TAG
                 int success = json_appareils.getInt(TAG_SUCCESS);
-                Log.d("SUCCEEDED: ", Integer.toString(json_appareils.getInt(TAG_SUCCESS)));
 
                 if (success == 1) {
                     // appareils found
@@ -137,35 +136,31 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 
                     appareils = json_appareils.getJSONArray(TAG_APPAREILS);
                     Log.d("JSONarray: ", appareils.toString());
-                    Log.d("AppsLength: ", Integer.toString(appareils.length()));
 
                     DatabaseHandler db = new DatabaseHandler(getApplicationContext());
 
                     // looping through All Appareils
                     for (int i = 0; i < appareils.length(); i++) {
                         JSONObject obj = appareils.getJSONObject(i);
-                        Log.v("CapteurListe", "HERE");
-
-                        if(obj.getString(TAG_IDm).equals(id_maison)) {
+                        if (obj.getString(TAG_IDm).equals(id_maison)) {
                             Capteur capteur = new Capteur();
                             capteur.setNom(obj.getString("description"));
                             capteur.setConso(obj.getString("puissance_actuelle"));
                             capteur.setIdc(obj.getString("id_capteur"));
-                            capteur.setIdm(obj.getString("id_maison"));
+                            //capteur.setIdm(obj.getString("id_maison"));
                             etatCapt = obj.getString("etat_demande");
-                            Log.v("Etatcapt", obj.getString("etat_demande"));
-                            if(etatCapt.equals("1")) {
+                            Log.v("Etat capteur", etatCapt);
+                            if (etatCapt.equals("1")) {
                                 capteur.setEtat(true);
-                            }else{
+                            } else {
                                 capteur.setEtat(false);
                             }
 
                             captExiste = db.capteurExiste(capteur);
-                            Log.v("Capteur Existe", Boolean.toString(captExiste));
-                            Log.v("ID_Capteur",capteur.getIdc());
-                            if(captExiste){
+                            Log.v("Capteur Existe ?", Boolean.toString(captExiste));
+                            if (captExiste) {
                                 db.updateEtatCapteur(capteur);
-                            }else{
+                            } else {
                                 // ajoute capteur à la liste des capteurs
                                 db.addAppareil(capteur);
                                 //Log.v("CapteurListe", );
@@ -192,7 +187,8 @@ public class HomeActivity extends Activity implements View.OnClickListener{
 
         /**
          * After completing background task Dismiss the progress dialog
-         * **/
+         * *
+         */
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all appareils
 
@@ -213,12 +209,6 @@ public class HomeActivity extends Activity implements View.OnClickListener{
         }
 
     }
-
-
-
-
-
-
 
 
 }

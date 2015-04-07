@@ -1,15 +1,15 @@
 package com.example.adrien.librairies;
 
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-        import android.content.ContentValues;
-        import android.content.Context;
-        import android.database.Cursor;
-        import android.database.sqlite.SQLiteDatabase;
-        import android.database.sqlite.SQLiteOpenHelper;
-        import android.util.Log;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -103,52 +103,55 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        return user;
 //    }
 
-//    public String getUserIdMaison(){
-//        String id_maison = "FAUX";
-//        int nbColonnes;
-//        String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
-//
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.rawQuery(selectQuery, null);
-//        // Move to first row
-//        cursor.moveToFirst();
-//        nbColonnes = cursor.getCount();
-//        Log.v("ID_MAISON", Integer.toString(nbColonnes));
-//
-//        if( nbColonnes> 0){
-//            id_maison = cursor.getString(0);
-//            Log.v("ID_MAISON", id_maison);
-//        }
-//            cursor.close();
-//            return id_maison;
-//    }
+    public String getUserIdMaison() {
+        String id_maison = "FAUX";
+        int nbColonnes;
+        String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        nbColonnes = cursor.getCount();
+
+        if (nbColonnes > 0) {
+            id_maison = cursor.getString(0);
+            Log.v("ID_MAISON", id_maison);
+        }
+        cursor.close();
+        return id_maison;
+    }
 
 
     // Updating état capteur
     public int updateEtatCapteur(Capteur capteur) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        Log.v("---------FONCTION------", "UPDATE_ETAT_CAPTEUR");
 
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_ETATd, capteur.getEtat());
+        boolean etatCapteur = capteur.getEtat();
+        values.put(KEY_ETATd, etatCapteur);
 
         // updating row
         return db.update(TABLE_LOGIN, values, KEY_IDc + " = ?",
-                new String[] { String.valueOf(capteur.getIdc()) });
+                new String[]{String.valueOf(capteur.getIdc())});
     }
 
     // Deleting capteur
     public void deleteCapteur(Capteur capteur) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_LOGIN, KEY_IDc + " = ?",
-                new String[] { String.valueOf(capteur.getNom()) });
+                new String[]{String.valueOf(capteur.getNom())});
         //db.close();
     }
 
-    public boolean capteurExiste(Capteur capteur){
+    public boolean capteurExiste(Capteur capteur) {
+        Log.v("---------FONCTION------", "CAPTEUR_EXISTE");
+
         SQLiteDatabase db = this.getReadableDatabase();
         String Query = "SELECT * FROM " + TABLE_LOGIN + " WHERE " + KEY_IDc + " = " + capteur.getIdc();
         Cursor cursor = db.rawQuery(Query, null);
-        if(cursor.getCount() <= 0){
+        if (cursor.getCount() <= 0) {
             cursor.close();
             return false;
         }
@@ -158,8 +161,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     /**
      * Getting nombre de capteurs dans la maison
-     * */
-    public int getCapteurCount(){
+     */
+    public int getCapteurCount() {
         String countQuery = "SELECT  * FROM " + TABLE_LOGIN;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
@@ -171,10 +174,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     /**
      * Storing appareils details in database
-     * */
+     */
     public void addAppareil(Capteur capt) {
+        Log.v("---------FONCTION------", "ADD_APPAREIL");
+
         SQLiteDatabase db = this.getWritableDatabase();
-        Log.v("TEST", "SQLITE");
+        //Log.v("TEST", "SQLITE");
 
         ContentValues values = new ContentValues();
         values.put(KEY_IDc, capt.getIdc());
@@ -186,10 +191,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_PUISSa, capt.getConso());
         // Inserting Row
         db.insert(TABLE_LOGIN, null, values);
-       //db.close(); // Closing database connection
+        //db.close(); // Closing database connection
     }
 
-    public List<Capteur> getAppareils(){
+    public List<Capteur> getAppareils() {
+        Log.v("---------FONCTION------", "GET_APPAREILS");
+
         List<Capteur> captList = new ArrayList<Capteur>();
         String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
         String etatCapt;
@@ -202,9 +209,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 capt.setIdc(cursor.getString(1));
                 capt.setNom(cursor.getString(2));
                 etatCapt = cursor.getString(4);
-                if(etatCapt.equals("1")){
+                Log.v(cursor.getString(1), etatCapt);
+                if (etatCapt.equals("1")) {
                     capt.setEtat(true);
-                }else{
+                } else {
                     capt.setEtat(false);
                 }
 
@@ -213,40 +221,51 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 captList.add(capt);
             } while (cursor.moveToNext());
         }
-        Log.v("Appareils SQLITE",captList.toString());
+        //Log.v("Appareils SQLITE",captList.toString());
         cursor.close();
-       // db.close();
+        // db.close();
         return captList;
     }
 
-    public Object getDonneeStrCapteur(int id_c, String donnee){
+    public Object getDonneeStrCapteur(int id_c, String donnee) {
+        Log.v("---------FONCTION------", "GET_DONNEE_STR_CAPT");
+
         SQLiteDatabase db = this.getReadableDatabase();
         String Query = "SELECT * FROM " + TABLE_LOGIN + " WHERE " + KEY_IDc + " = " + id_c;
         Cursor cursor = db.rawQuery(Query, null);
-        int i=0;
-        switch(donnee){
-            case KEY_IDc : i=1;
+        int i = 0;
+        switch (donnee) {
+            case KEY_IDc:
+                i = 1;
                 break;
-            case KEY_DESCRIPTION : i=2;
+            case KEY_DESCRIPTION:
+                i = 2;
                 break;
-            case KEY_ETATr : i=3;
+            case KEY_ETATr:
+                i = 3;
                 break;
-            case KEY_ETATd : i=4;
+            case KEY_ETATd:
+                i = 4;
                 break;
-            case KEY_DEMANDE_TRAITEE : i=5;
+            case KEY_DEMANDE_TRAITEE:
+                i = 5;
                 break;
-            case KEY_PUISSc : i=6;
+            case KEY_PUISSc:
+                i = 6;
                 break;
-            case KEY_PUISSa : i=7;
+            case KEY_PUISSa:
+                i = 7;
                 break;
-            default :
+            default:
                 break;
         }
         return cursor.getString(i);
     }
 
 
-    public boolean getDonneeBoolCapteur(int id_c){
+    public boolean getDonneeBoolCapteur(int id_c) {
+        Log.v("---------FONCTION------", "GET_DONNEE_BOOL_CAPTEUR");
+
         int etat;
         SQLiteDatabase db = this.getReadableDatabase();
         String Query = "SELECT * FROM " + TABLE_LOGIN + " WHERE " + KEY_IDc + "=" + id_c;
@@ -254,10 +273,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(Query, null);
         cursor.moveToFirst();
         int i = cursor.getColumnIndex(KEY_ETATd);
+
         etat = cursor.getInt(i);
-        Log.v("ColumIndex", Integer.toString(i));
-        Log.v("Etat du capteur", Integer.toString(etat));
-        if(etat==0){// || cursor.getInt(4)==0
+        //Log.v("Etat du capteur", Integer.toString(etat));
+        if (etat == 0) {// || cursor.getInt(4)==0
             cursor.close();
             return false;
         }
@@ -268,8 +287,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     /**
      * Delete all tables and create them again
-     * */
-    public void resetTables(){
+     */
+    public void resetTables() {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
         db.delete(TABLE_LOGIN, null, null);

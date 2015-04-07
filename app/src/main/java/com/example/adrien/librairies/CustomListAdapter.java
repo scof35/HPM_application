@@ -26,9 +26,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 /**
-* Created by Adrien on 04/03/2015.
-*/
-public class CustomListAdapter extends BaseAdapter{
+ * Created by Adrien on 04/03/2015.
+ */
+public class CustomListAdapter extends BaseAdapter {
 
     private Activity activity;
     private LayoutInflater inflater;
@@ -58,6 +58,7 @@ public class CustomListAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Log.v("---------FONCTION------", "GET VIEW");
 
         if (inflater == null)
             inflater = (LayoutInflater) activity
@@ -70,7 +71,7 @@ public class CustomListAdapter extends BaseAdapter{
         TextView conso2 = (TextView) convertView.findViewById(R.id.conso2);
         TextView prix1 = (TextView) convertView.findViewById(R.id.prix1);
         TextView prix2 = (TextView) convertView.findViewById(R.id.prix2);
-        ToggleButton onoff = (ToggleButton) convertView.findViewById(R.id.onoff);
+        final ToggleButton onoff = (ToggleButton) convertView.findViewById(R.id.onoff);
 //
         // getting capteur data for the row
         final Capteur m = capteurItems.get(position);
@@ -90,32 +91,40 @@ public class CustomListAdapter extends BaseAdapter{
 
         // boutton ON/OFF
         final DatabaseHandler db = new DatabaseHandler(parent.getContext());
-        onoff.setChecked(db.getDonneeBoolCapteur(Integer.valueOf(m.getIdc())));
-        onoff.setOnCheckedChangeListener(new  CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton toggleButton, boolean isChecked) {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
+        onoff.setChecked(m.getEtat());
 
-                JSONParser json = new JSONParser();
 
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("id_maison", m.getIdm()));
-                params.add(new BasicNameValuePair("id_capteur", m.getIdc()));
-                if(isChecked){
-                    Log.v("OLOL","1");
-                    //m.setEtat(true);
-                    params.add(new BasicNameValuePair("etat_demande",Integer.toString(1)));
-                } else{
-                    Log.v("OLOL","0");
-                    //m.setEtat(false);
-                    params.add(new BasicNameValuePair("etat_demande", Integer.toString(0)));
-                }
+        onoff.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Boolean isChecked = ((ToggleButton) view).isChecked();
+                        m.setEtat(isChecked);
 
-                json.makeHttpRequest(updateURL,"POST",params);
-                db.updateEtatCapteur(m);
-            }
-        });
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+
+                        JSONParser json = new JSONParser();
+
+                        List<NameValuePair> params = new ArrayList<NameValuePair>();
+                        params.add(new BasicNameValuePair("id_maison", db.getUserIdMaison()));
+                        Log.v("ID_C", m.getIdc());
+                        params.add(new BasicNameValuePair("id_capteur", m.getIdc()));
+                        if (isChecked) {
+                            Log.v("OLOL", "1");
+                            //m.setEtat(true);
+                            params.add(new BasicNameValuePair("etat_demande", "1"));
+                        } else {
+                            Log.v("OLOL", "0");
+                            //m.setEtat(false);
+                            params.add(new BasicNameValuePair("etat_demande", "0"));
+                        }
+
+                        db.updateEtatCapteur(m);
+                        json.makeHttpRequest(updateURL, "POST", params);
+                    }
+                });
+
         return convertView;
     }
 

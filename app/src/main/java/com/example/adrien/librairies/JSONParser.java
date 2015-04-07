@@ -1,25 +1,25 @@
 package com.example.adrien.librairies;
 
-        import java.io.BufferedReader;
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.InputStreamReader;
-        import java.io.UnsupportedEncodingException;
-        import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
-        import org.apache.http.HttpEntity;
-        import org.apache.http.HttpResponse;
-        import org.apache.http.NameValuePair;
-        import org.apache.http.client.ClientProtocolException;
-        import org.apache.http.client.entity.UrlEncodedFormEntity;
-        import org.apache.http.client.methods.HttpGet;
-        import org.apache.http.client.methods.HttpPost;
-        import org.apache.http.client.utils.URLEncodedUtils;
-        import org.apache.http.impl.client.DefaultHttpClient;
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import android.util.Log;
+import android.util.Log;
 
 public class JSONParser {
 
@@ -43,7 +43,7 @@ public class JSONParser {
         try {
 
             // check for request method
-            if(method == "POST"){
+            if (method == "POST") {
                 // request method is POST
                 // defaultHttpClient
                 Log.v("PARAMS", params.toString());
@@ -55,7 +55,7 @@ public class JSONParser {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 is = httpEntity.getContent();
 
-            }else if(method == "GET"){
+            } else if (method == "GET") {
                 // request method is GET
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 String paramString = URLEncodedUtils.format(params, "utf-8");
@@ -87,7 +87,7 @@ public class JSONParser {
             is.close();
             json = sb.toString();
             jsonTab = json.split("\n");
-            jsonLastline = jsonTab[countLines(json)-1];
+            jsonLastline = jsonTab[countLines(json) - 1];
             Log.v("JSONPARSER", jsonLastline);
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
@@ -106,8 +106,8 @@ public class JSONParser {
 
     }
 
-    private static int countLines(String str){
+    private static int countLines(String str) {
         String[] lines = str.split("\n");
-        return  lines.length;
+        return lines.length;
     }
 }
