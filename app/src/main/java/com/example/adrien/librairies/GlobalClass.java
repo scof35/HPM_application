@@ -14,7 +14,6 @@ public class GlobalClass extends Application {
         return id_maison;
     }
 
-
     public void setIDm(String v_id_maison) {
 
         id_maison = v_id_maison;

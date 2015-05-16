@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.adrien.librairies.Constante;
 import com.example.adrien.librairies.FonctionsUtilisateur;
 import com.example.adrien.librairies.GlobalClass;
 import com.example.adrien.librairies.JSONParser;
@@ -31,23 +32,16 @@ public class LoginActivity extends Activity {
     // JSON Response node names
     private static final String KEY_SUCCESS = "success";
     private static final String KEY_IDm = "id_maison";
-    private static final String TAG = "myApp";
     private static List<NameValuePair> params;
 
-
-    // Pour des tests,
-    // Utiliser http://10.0.2.2/  pour se connecter au localhost avec WAMP i.e. http://localhost/
-    private static final String loginURL = "http://192.168.43.109/hpm/index.php";
-    //private static final String loginURL = "http://10.0.2.2/hpm/index.php";
-
-    private static final String login_tag = "login";
-    private static final String register_tag = "register";
+    private static String loginURL;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        loginURL = "http://"+ Constante.IP_SERVEUR+"/hpm/index.php";
 
         // Importing all assets like buttons, text fields
         btnLogin = (Button) findViewById(R.id.buttonConnecter);
@@ -73,15 +67,16 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Log.v(Constante.TAG, "Exécution AsyncThread IdentificationClient");
             // Importing all assets like buttons, text fields
             inputLog = (EditText) findViewById(R.id.editTextLogin);
             inputPassword = (EditText) findViewById(R.id.editTextMDP);
             textViewErreur = (TextView) findViewById(R.id.textViewErreur);
 
             String login = inputLog.getText().toString();
-            Log.v(TAG, login);
+            Log.v(Constante.TAG, login);
             String mdp = inputPassword.getText().toString();
-            Log.v(TAG, mdp);
+            Log.v(Constante.TAG, mdp);
 
             userFunction = new FonctionsUtilisateur();
             params = userFunction.loginUser(login, mdp);
@@ -98,13 +93,13 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(JSONObject json) {
-            Log.v(TAG, "ACHIEVE SUCCESS");
+            Log.v(Constante.TAG, "Connexion réussie ");
             // check for login response
             try {
                 if (json.getString(KEY_SUCCESS) != null) {
                     textViewErreur.setText("");
                     String res = json.getString(KEY_SUCCESS);
-                    Log.v(TAG, res);
+                    Log.v(Constante.TAG, res);
                     if (Integer.parseInt(res) == 1) {
                         // user successfully logged in
                         // Store user details in SQLite Database
@@ -131,7 +126,7 @@ public class LoginActivity extends Activity {
                         finish();
                     } else {
                         // Error in login
-                        textViewErreur.setText("Login ou mot de passe incorrect");
+                        textViewErreur.setText("Login ou mot de passe incorrect ");
                     }
                 }
             } catch (JSONException e) {

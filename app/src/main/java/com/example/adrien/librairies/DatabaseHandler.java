@@ -125,14 +125,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Updating état capteur
     public int updateEtatCapteur(Capteur capteur) {
-        Log.v("---------FONCTION------", "UPDATE_ETAT_CAPTEUR");
+        Log.v(Constante.TAG, "Fonction appelée -> updateEtatCapteur");
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         boolean etatCapteur = capteur.getEtat();
         String conso = capteur.getConso();
         values.put(KEY_ETATd, etatCapteur);
-        values.put(KEY_PUISSa,conso);
+        values.put(KEY_PUISSc,conso);
 
         // updating row
         return db.update(TABLE_LOGIN, values, KEY_IDc + " = ?",
@@ -148,7 +148,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public boolean capteurExiste(Capteur capteur) {
-        Log.v("---------FONCTION------", "CAPTEUR_EXISTE");
+        Log.v(Constante.TAG, "Fonction appelée -> capteurExiste");
 
         SQLiteDatabase db = this.getReadableDatabase();
         String Query = "SELECT * FROM " + TABLE_LOGIN + " WHERE " + KEY_IDc + " = " + capteur.getIdc();
@@ -178,7 +178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Storing appareils details in database
      */
     public void addAppareil(Capteur capt) {
-        Log.v("---------FONCTION------", "ADD_APPAREIL");
+        Log.v(Constante.TAG, "Fonction appelée -> addAppareil");
 
         SQLiteDatabase db = this.getWritableDatabase();
         //Log.v("TEST", "SQLITE");
@@ -197,7 +197,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<Capteur> getAppareils() {
-        Log.v("---------FONCTION------", "GET_APPAREILS");
+        Log.v(Constante.TAG, "Fonction appelée -> getAppareils");
 
         List<Capteur> captList = new ArrayList<Capteur>();
         String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
@@ -230,7 +230,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Object getDonneeStrCapteur(int id_c, String donnee) {
-        Log.v("---------FONCTION------", "GET_DONNEE_STR_CAPT");
+        Log.v(Constante.TAG, "Fonction appelée -> getDonneeStrCapteur");
 
         SQLiteDatabase db = this.getReadableDatabase();
         String Query = "SELECT * FROM " + TABLE_LOGIN + " WHERE " + KEY_IDc + " = " + id_c;
@@ -266,7 +266,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     public boolean getDonneeBoolCapteur(int id_c) {
-        Log.v("---------FONCTION------", "GET_DONNEE_BOOL_CAPTEUR");
+        Log.v(Constante.TAG, "Fonction appelée -> getDonneeBoolCapteur");
 
         int etat;
         SQLiteDatabase db = this.getReadableDatabase();

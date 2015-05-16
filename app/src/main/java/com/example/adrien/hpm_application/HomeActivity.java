@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.net.wifi.WifiInfo;
 
 import com.example.adrien.librairies.Capteur;
+import com.example.adrien.librairies.Constante;
 import com.example.adrien.librairies.DatabaseHandler;
 import com.example.adrien.librairies.GlobalClass;
 import com.example.adrien.librairies.JSONParser;
@@ -32,20 +33,20 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     Button btnAppareils, btnReglages, btnQuitter;
     JSONArray appareils;
 
-    private static final String appsURL = "http://192.168.43.109/hpm/get_all_sensors.php";
-    //private static final String appsURL = "http://10.0.2.2/hpm/get_all_sensors.php";
+    private static String appsURL;
+
     private ProgressDialog pDialog;
     private static final String TAG_APPAREILS = "apps";
     private static final String TAG_IDm = "id_maison";
     private static final String TAG_SUCCESS = "success";
-
-    private static List<Capteur> capteurListe = new ArrayList<Capteur>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+
+        appsURL = "http://"+ Constante.IP_SERVEUR+"/hpm/get_all_sensors.php";
 
         btnAppareils = (Button) findViewById(R.id.btnAppareils);
         btnReglages = (Button) findViewById(R.id.btnReglages);
@@ -94,20 +95,20 @@ public class HomeActivity extends Activity implements View.OnClickListener {
          */
         @Override
         protected void onPreExecute() {
+            Log.v(Constante.TAG, "Exécution AsyncThread - ChargerApps");
             super.onPreExecute();
             pDialog = new ProgressDialog(HomeActivity.this);
             pDialog.setMessage("Chargement des appareils. Attendez SVP...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
-            pDialog.show();
-
+            if(!isFinishing()) {pDialog.show();}
         }
 
         /**
          * getting All appareils from url
          */
         protected String doInBackground(String... args) {
-            Log.v("---------FONCTION------", "DO_IN_BACKGROUND");
+
             Boolean captExiste = false;
             String etatCapt;
             JSONParser jParserAppareils = new JSONParser();
@@ -121,11 +122,13 @@ public class HomeActivity extends Activity implements View.OnClickListener {
             final String id_maison = globalVariable.getIDm();
             params.add(new BasicNameValuePair("id_maison", id_maison));
 
+            Log.v(Constante.TAG, "Requête HTTP - GET");
+
             // getting JSON string from URL
             JSONObject json_appareils = jParserAppareils.makeHttpRequest(appsURL, "GET", params);
 
             // Check your log cat for JSON reponse
-            Log.d("Tous les appareils: ", json_appareils.toString());
+            Log.v(Constante.TAG, "Résultat requête "+json_appareils.toString());
 
             try {
                 // Checking for SUCCESS TAG
@@ -136,7 +139,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
                     // Getting Array of appareils
 
                     appareils = json_appareils.getJSONArray(TAG_APPAREILS);
-                    Log.d("JSONarray: ", appareils.toString());
+                    //Log.d("JSONarray ", appareils.toString());
 
                     DatabaseHandler db = new DatabaseHandler(getApplicationContext());
 
@@ -150,7 +153,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
                             capteur.setIdc(obj.getString("id_capteur"));
                             //capteur.setIdm(obj.getString("id_maison"));
                             etatCapt = obj.getString("etat_demande");
-                            Log.v("Etat capteur", etatCapt);
+                            Log.v(Constante.TAG, "Etat capteur "+capteur.getNom()+"->"+ etatCapt);
                             if (etatCapt.equals("1")) {
                                 capteur.setEtat(true);
                             } else {
@@ -158,7 +161,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
                             }
 
                             captExiste = db.capteurExiste(capteur);
-                            Log.v("Capteur Existe ?", Boolean.toString(captExiste));
+                            Log.v(Constante.TAG, "Capteur existant ? "+Boolean.toString(captExiste));
                             if (captExiste) {
                                 db.updateEtatCapteur(capteur);
                             } else {
@@ -168,7 +171,6 @@ public class HomeActivity extends Activity implements View.OnClickListener {
                             }
                         }
                     }
-
 
                 } else {
                     // no appareils found
@@ -192,21 +194,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
          */
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all appareils
-
             pDialog.dismiss();
-//            //adapter.notifyDataSetChanged();
-//            // updating UI from Background Thread
-//            runOnUiThread(new Runnable() {
-//                public void run() {
-//                    /**
-//                     * Updating parsed JSON data into ListView
-//                     * */
-//                    // updating listview
-//                    //setListAdapter(adapt);
-//                    listView.setAdapter(adapt);
-//                }
-//            });
-
         }
 
     }
