@@ -32,8 +32,8 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     Button btnAppareils, btnReglages, btnQuitter;
     JSONArray appareils;
 
-    //private static final String appsURL = "http://192.168.43.109/hpm/get_all_sensors.php";
-    private static final String appsURL = "http://10.0.2.2/hpm/get_all_sensors.php";
+    private static final String appsURL = "http://192.168.43.109/hpm/get_all_sensors.php";
+    //private static final String appsURL = "http://10.0.2.2/hpm/get_all_sensors.php";
     private ProgressDialog pDialog;
     private static final String TAG_APPAREILS = "apps";
     private static final String TAG_IDm = "id_maison";

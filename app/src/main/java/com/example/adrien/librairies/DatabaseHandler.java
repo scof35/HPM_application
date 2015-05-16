@@ -130,7 +130,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         boolean etatCapteur = capteur.getEtat();
+        String conso = capteur.getConso();
         values.put(KEY_ETATd, etatCapteur);
+        values.put(KEY_PUISSa,conso);
 
         // updating row
         return db.update(TABLE_LOGIN, values, KEY_IDc + " = ?",

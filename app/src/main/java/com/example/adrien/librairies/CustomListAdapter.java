@@ -33,8 +33,8 @@ public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Capteur> capteurItems;
-    //private static String updateURL = "http://192.168.43.109/hpm/update_sensor.php";
-    private static String updateURL = "http://10.0.2.2/hpm/update_sensor.php";
+    private static String updateURL = "http://192.168.43.109/hpm/update_sensor.php";
+    //private static String updateURL = "http://10.0.2.2/hpm/update_sensor.php";
 
 
 
@@ -83,7 +83,7 @@ public class CustomListAdapter extends BaseAdapter {
 
         // conso
         conso1.setText("Consommation : ");
-        conso2.setText(String.valueOf(m.getConso()) + " Watts");
+        conso2.setText(String.valueOf(m.getConso()) + " kWh");
 
         //Prix
         prix1.setText("Prix : ");
